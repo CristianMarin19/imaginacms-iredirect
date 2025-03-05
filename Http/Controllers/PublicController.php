@@ -2,22 +2,12 @@
 
 namespace Modules\Iredirect\Http\Controllers;
 
-use Modules\Core\Http\Controllers\BasePublicController;
+use Modules\Ihelpers\Http\Controllers\Api\BaseApiController;
 
-class PublicController extends BasePublicController
+class PublicController extends BaseApiController
 {
-    /**
-     * @var RedirectRepository
-     */
-    private $redirect;
-
-    public function __construct(RedirectRepository $redirect)
-    {
-        parent::__construct();
-        $this->redirect = $redirect;
-    }
-
-    public function index()
-    {
-    }
+  public function __construct()
+  {
+    parent::__construct();
+  }
 }

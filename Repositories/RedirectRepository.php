@@ -2,33 +2,8 @@
 
 namespace Modules\Iredirect\Repositories;
 
-use Modules\Core\Repositories\BaseRepository;
+use Modules\Core\Icrud\Repositories\BaseCrudRepository;
 
-interface RedirectRepository extends BaseRepository
+interface RedirectRepository extends BaseCrudRepository
 {
-    /**
-     * Get the next redirect of the given redirect
-     *
-     * @param  object  $id
-     * @return object
-     */
-    public function find($id);
-
-    /**
-     * Get the next redirect of the given redirect
-     *
-     * @param  object  $slug
-     * @return object
-     */
-    public function findBySlug($slug);
-
-    public function getItemsBy($params);
-
-    public function getItem($criteria, $params = false);
-
-    public function create($data);
-
-    public function updateBy($criteria, $data, $params = false);
-
-    public function deleteBy($criteria, $params = false);
 }

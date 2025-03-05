@@ -2,22 +2,15 @@
 
 namespace Modules\Iredirect\Transformers;
 
-use Illuminate\Http\Resources\Json\JsonResource;
+use Modules\Core\Icrud\Transformers\CrudResource;
 
-class RedirectApiTransformer extends JsonResource
+class RedirectApiTransformer extends CrudResource
 {
-    public function toArray($request)
-    {
-        $data = [
-            'id' => $this->when($this->id, $this->id),
-            'from' => $this->when($this->from, $this->from),
-            'to' => $this->when($this->to, $this->to),
-            'redirect_type' => $this->when($this->redirect_type, $this->redirect_type),
-            'createdAt' => $this->when($this->created_at, $this->created_at),
-            'updatedAt' => $this->when($this->updated_at, $this->updated_at),
-
-        ];
-
-        return $data;
-    }
+  /**
+   * Method to merge values with response
+   */
+  public function modelAttributes($request)
+  {
+    return [];
+  }
 }
