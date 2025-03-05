@@ -5,16 +5,44 @@ use Modules\Iredirect\Entities\Redirect as Redirect;
 
 try {
     $uri = Request::path();
+    $decodedUri  = urldecode($uri);
 
-    $redirect = Redirect::where('from', urldecode($uri))
-      ->orWhere('from', '/'.urldecode($uri))->first();
+    $redirect = Redirect::whereIn('from', [$decodedUri, '/' . $decodedUri])->first();
+
+    if (!$redirect) {
+      $redirects = Redirect::where('from', 'LIKE', '%/*%')->get();
+
+      foreach ($redirects as $wildcardRedirect) {
+        $pattern = preg_quote($wildcardRedirect->from, '/');
+        $pattern = str_replace('\*', '.*', $pattern);
+        if (preg_match("/^$pattern$/", $decodedUri)) {
+          $redirect = $wildcardRedirect;
+          $redirect->from = $decodedUri;
+          break;
+        }
+      }
+    }
 
     if (isset($redirect->from) && ! empty($redirect->from)) {
         Route::redirect($redirect->from, Str::start($redirect->to, '/'), $redirect->redirect_type);
     }
 
     Route::any('find-redirect/{url}', function ($url) {
+        $decodedUrl = urldecode($url);
         $redirect = Redirect::where('from', urldecode($url))->first();
+
+        if (!$redirect) {
+          $redirects = Redirect::where('from', 'LIKE', '%/*%')->get();
+
+          foreach ($redirects as $wildcardRedirect) {
+            $pattern = preg_quote($wildcardRedirect->from, '/');
+            $pattern = str_replace('\*', '.*', $pattern);
+            if (preg_match("/^$pattern$/", $decodedUrl)) {
+              $redirect = $wildcardRedirect;
+              break;
+            }
+          }
+        }
 
         if (isset($redirect->from) && ! empty($redirect->from)) {
             try {
